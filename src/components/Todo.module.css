@@ -1,0 +1,20 @@
+.linethrough{
+    text-decoration: line-through;
+}
+.container{
+    display: flex;
+    border: solid gray 1px;
+    border-radius: 10px;
+    background-color: aquamarine;
+    width: 500px;
+    justify-content: space-between;
+    margin: 10px auto;
+    padding: 5px 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+button{
+    background-color: black;
+    color: white;
+    margin: auto 5px;
+}
