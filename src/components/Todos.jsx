@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { AddTodo } from "./AddTodo";
 import { Todo } from "./Todo";
-
+import axios from "axios"
  const Todos = () => {
 
   const [todos, settodos] = useState([]);
   const [pageNo, setpageNo] = useState(1);
+  const [totalcount, setTotalcount] = useState(0);
+  const [limit, setLimit] = useState(3);
 
   useEffect(() => {
-    const getTodos = async () => {
-      try {
-        let res = await fetch(`http://localhost:8080/todos?_page=${pageNo}`);
-        let data = await res.json();
-        settodos(data);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-    getTodos();
-  }, [pageNo]);
+    axios.get(`http://localhost:8080/todos?_page=${pageNo}&_limit=${limit}`)
+       .then((r)=> {
+        settodos(r.data);
+        setTotalcount(Number(r.headers["x-total-count"]));
+      })
+  }, [pageNo , limit]);
 
   const onAdd = (newTodo) => {
     settodos([...todos, newTodo]);
@@ -47,12 +44,22 @@ import { Todo } from "./Todo";
       ))}
 
       <div>
-        <button onClick={()=>{
+        <button disabled={pageNo <=1 }
+        onClick={()=>{
             if(pageNo>1){
                 setpageNo(pageNo - 1)
             }
         }}>Previous</button>
-        <button onClick={()=>setpageNo(pageNo + 1)}>Next</button>
+        <select onChange={(e)=> setLimit(Number(e.target.value))}>
+        <option value={3}>3</option>
+        <option value={6}>6</option>
+        <option value={9}>9</option>
+
+
+
+        </select>
+        <button disabled={totalcount < pageNo * 3}
+        onClick={()=>setpageNo(pageNo + 1)}>Next</button>
       </div>
     </div>
   );
